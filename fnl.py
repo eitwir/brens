@@ -20,7 +20,7 @@ while True:
     if page_num == 171:
         break
 
-    num = 0
+    cnt = 0
     rows = table.find_all('tr')
     data = []
     for row in rows:
@@ -31,14 +31,15 @@ while True:
         row_data_new2 = [item.replace('\t', ',') for item in row_data_new1]
         row_data_new3 = [re.sub(r',+', ',', item) for item in row_data_new2]
         data.append(row_data_new3)
-        data_split = [row[0].split(',') for row in data]
-        # print(row)
-    
+        data_split = [row[0].split(',', 4) for row in data]
+        cnt = cnt + 1
+        print("Новая строка", "№", cnt,"добавлена" )
+
     all_data.extend(data_split)
     page_num += 1
 
 if all_data:
-    df = pd.DataFrame(all_data, names=['Бренд', 'OEM', 'Наименоание', 'Предложений', 'Мин. цена'])
+    df = pd.DataFrame(all_data, columns=['Бренд', 'OEM', 'Наименоание', 'Предложений', 'Мин. цена'])
     output_path = 'data/table' + str(current_dateTime) + '.xlsx'  # Путь к файлу Excel
     df.to_excel(output_path, index=False, header=False)
 else:
